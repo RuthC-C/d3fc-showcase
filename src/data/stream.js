@@ -6,7 +6,7 @@
 		
 		var 	product = 'BTC-USD',
 				start = datastream.start,
-				end = datastream.end,
+				end = datastream.end;
 				
 		
 			
@@ -49,21 +49,6 @@
 			return coinbase;
 		};
 		
-		dataGenerator.end = function(x) {
-			if (!arguments.length) {
-				return granularity;
-			}
-			granularity = x;
-			return coinbase;
-		};
-		
-		dataGenerator.granularity = function(x) {
-			if (!arguments.length) {
-				return granularity;
-			}
-			granularity = x;
-			return coinbase;
-		};
 		
 		return coinbase;
 	};	
