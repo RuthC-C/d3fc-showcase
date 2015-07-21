@@ -8,9 +8,15 @@
         .append('svg')
         .attr('width', width)
         .attr('height', height);
+    var data = fc.data.coinbase();
 
-    var data = fc.dataGenerator()(150);
+    /* fetch some data!
+    data(function(error, data) {
+        d3.select('#coinbase')
+        .text(JSON.stringify(error ? error : data, null, 2));
+    });*/
 
+    //function renderChart(data) {
     var chart = fc.chart.linearTimeSeries()
         .xDomain(fc.util.extent(data, 'date'))
         .yDomain(fc.util.extent(data, ['open', 'close']));
@@ -30,9 +36,7 @@
         .series([gridlines, area, line]);
 
     chart.plotArea(multi);
-
     svg.datum(data)
         .call(chart);
-
+    //}
 })(d3, fc);
-
