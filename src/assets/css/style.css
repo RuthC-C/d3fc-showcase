@@ -1,9 +1,14 @@
+body {
+   padding-top: 70px;
+}
+
 path.line {
   stroke: rgb(26, 154, 249);
 }
 
 #chart-example {
-  position: absolute;
-  left: 10px;
-  top: 10px;
+  position: relative;
+  padding: 10px 10px 10px 10px;
+  border: 5px ridge #5aca97a;
+  border-radius: 25px;
 }

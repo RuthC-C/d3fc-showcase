@@ -1,20 +1,25 @@
 (function(d3, fc) {
     'use strict';
 
-    var width = 500;
-    var height = 300;
+    var width = 700;
+    var height = 400;
+    //var stream = fc.data.stream();
 
     var svg = d3.select('#chart-example')
         .append('svg')
         .attr('width', width)
         .attr('height', height);
 
-    var data = fc.data.coinbase()
-        .start(new Date(2015, 4, 22))
-        .end(new Date(2015, 4, 30))
+    var data = fc.data.update()
+        .start(new Date(2015, 0, 1))
+        .end(new Date(2015, 1, 1))
         .granularity(10000);
 
-    //var data = fc.data.stream();
+    /*var data = fc.data.coinbase()
+        .start(new Date(2014, 1, 1, 0))
+        .end(new Date(fc.data.update().generator()))
+        .granularity(10000);*/
+
     var render = function(error, data) {
         var chart = fc.chart.linearTimeSeries()
             .xDomain(fc.util.extent(data, 'date'))
@@ -33,6 +38,7 @@
 
         var multi = fc.series.multi()
             .series([gridlines, area, line]);
+
 
         chart.plotArea(multi);
         svg.datum(data)

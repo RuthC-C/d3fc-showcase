@@ -1,23 +1,54 @@
 <!DOCTYPE HTML>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">   
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="description">
+    
 
     <!-- D3FC scripts -->
     <script src="assets/js/d3.js"></script> 
     <script src="assets/js/Layout.js"></script>
     <script src="assets/js/d3fc.js"></script>
 
+   
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script><!--JQuery-->
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script><!--JavaScript-->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"><!--Bootstrap CSS-->
     <link rel="stylesheet" href="assets/css/d3fc.css"> <!-- D3FC -->
     <link rel="stylesheet" type="text/css" href="assets/css/style.css"> <!-- Custom style-sheet -->
 			
     <title> Initial Test Application </title>
   </head>
   <body>
-    <div id="chart-example">
-      <script src="assets/data/coinbase.js"></script>
-      <script src="assets/js/main.js"></script>
-    </div>
+  
+  
+    <div class="container">
+    
+        <!--navbar-->
+        <nav class="navbar navbar-default navbar-fixed-top navbar">
+            <div class="container">
+                <div class="navbar-header">
+                    <div class="header-logo-invertocat" href="#" data-hotkey="g d" aria-label="Homepage" data-ga-click="Header, go to dashboard, icon:logo">
+                    </div><!--./header-logo-->
+                </div><!--./navbar-header-->
+                <form class="navbar-form navbar-left" role="search">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search">
+                    </div>
+            </div><!--./container-->
+        </nav><!--./header-->
+        
+        <div id="chart-wrapper">
+        <h1>Data Chart</h1>
+            <div id="chart-example" class="container-fluid">
+                  <script src="assets/data/coinbase.js"></script>
+                  <script src="assets/data/update.js"></script>
+                  <script src="assets/data/stream.js"></script>
+                  <script src="assets/js/main.js"></script>
+            </div><!--./chart-example-->
+        </div><!--./chart-wrapper-->
+    </div><!--./wrapper-->
   </body>
 </html>
