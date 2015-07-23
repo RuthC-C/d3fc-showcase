@@ -6,6 +6,7 @@
         var generator = fc.data.coinbase();
 
         var updateInterval = 3000;
+        var incr = 3;
 
         var updateChart = function(cb) {
             // update chart after specified interval
@@ -14,12 +15,17 @@
             }, updateInterval);
 
             function update(cb) {
+                //var currentStartDate = generator.start();
                 var currentEndDate = generator.end();
 
-                //var newEndDate = new Date(currentEndDate.setDate(currentEndDate.getDate() + 1));
+                //var newStartDate = new Date(currentStartDate.setDate(currentStartDate.getDate() + incr));
+                var newEndDate = new Date(currentEndDate.setDate(currentEndDate.getDate() + incr));
 
-                var newEndDate = new Date(currentEndDate.setHours(currentEndDate.getHours() + 1));
+                //var newStartDate = new Date(currentStartDate.setHours(currentStartDate.getHours() + incr));
+                //var newEndDate = new Date(currentEndDate.setHours(currentEndDate.getHours() + incr));
+                //var newEndDate = new Date(currentEndDate.setMinutes(currentEndDate.getMinutes() + incr));
 
+                //generator.start(newStartDate);
                 generator.end(newEndDate);
 
                 //var currentStartDate = generator.start();
