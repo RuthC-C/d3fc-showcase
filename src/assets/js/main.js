@@ -11,9 +11,9 @@
         .attr('height', height);
 
     var data = fc.data.update()
-        .start(new Date(2015, 0, 1))
-        .end(new Date(2015, 1, 1))
-        .granularity(10000);
+        .start(new Date(2015, 5, 1, 9))
+        .end(new Date(2015, 5, 3, 9))
+        .granularity(100000);
 
     /*var data = fc.data.coinbase()
         .start(new Date(2014, 1, 1, 0))

@@ -1,5 +1,42 @@
+#@font-family-monospace:    "Lucida-Console", monospace;
+@font-family-base: @font-family-monospace;
+@base: #FFE4C4;
+@sky-blue: lighten(#00BFFF, 20%);#
+
 body {
    padding-top: 70px;
+}
+#wrapper {
+padding-top: 50px;
+}
+
+#chart-wrapper{
+padding-top: 70px;
+background-image: url('http://i.imgur.com/tf1vh1g.jpg');
+background-size: cover;
+width: 100%;
+height: 150vh;
+float: left;
+}
+
+h1 {
+    display: inline;
+	font-size: 5em;
+}
+
+h2 {
+display: inline;
+font-size: 2em;
+}
+
+#banner {
+	background-color: white;
+	position: relative;
+	padding: 20px;
+    font-family: "Lucida-Console", monospace;
+	margin: 0 auto;
+	mix-blend-mode: screen; //this is the magic
+	top: 60px;
 }
 
 path.line {
@@ -8,7 +45,9 @@ path.line {
 
 #chart-example {
   position: relative;
-  padding: 10px 10px 10px 10px;
-  border: 5px ridge #5aca97a;
-  border-radius: 25px;
+  margin: 20px 20px 20px 20px;
+  float: left;
+  display: block;
+  width: 730px;
+  background-color: white;
 }
