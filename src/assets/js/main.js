@@ -9,12 +9,8 @@
         .attr('width', width)
         .attr('height', height);
 
-    var data = fc.data.coinbase()
-        .start(new Date(2015, 4, 22))
-        .end(new Date(2015, 4, 30))
-        .granularity(10000);
+    var data = fc.dataGenerator();
 
-    //var data = fc.data.stream();
     var render = function(error, data) {
         var chart = fc.chart.linearTimeSeries()
             .xDomain(fc.util.extent(data, 'date'))
