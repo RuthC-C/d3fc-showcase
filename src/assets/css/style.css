@@ -45,9 +45,10 @@ path.line {
 
 #chart-example {
   position: relative;
-  margin: 20px 20px 20px 20px;
+  margin: 20px 20px 10% 10%;
   float: left;
   display: block;
-  width: 730px;
+  border-radius: 5px;
+  width: 80%;
   background-color: white;
 }
