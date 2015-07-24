@@ -1,35 +1,3 @@
-/*var ws;
-(function(ws) {
-    'use strict';
-    fc.data.websocket = function() {
-        if (window.WebSocker) {
-            console.log('Websocket object is support in browser');
-            ws = new WebSocket('wss://ws-feed.exchange.coinbase.com');
-            ws.onopen = function() {
-                console.log('onopen');
-            };
-            ws.onmessage = function(event) {
-                console.log('echo from serve : ' + event.data);
-            };
-
-            ws.onclose = function() {
-                console.log('onclose');
-            };
-            ws.onerror = function() {
-                console.log('onerror');
-            };
-
-        } else {
-            console.log('Websocket object not supported in your browser');
-        }
-        return ws;
-    };
-
-})(ws);*/
-
-
-
-
 (function(fc) {
     'use strict';
 
@@ -37,6 +5,7 @@
 
         var websocket = function(cb) {
             var coinbaseSocket = new WebSocket('wss://ws-feed.exchange.coinbase.com');
+            var data = [];
 
             var msg = {
                 type: 'subscribe',
@@ -49,10 +18,24 @@
             };
 
             coinbaseSocket.onmessage = function(event) {
-                console.log(event.data);
-                cb(null, event.data);
-                //var msg = JSON.parse(event.data);
-                //var time = new Date(msg.date);
+                var jMsg = JSON.parse(event.data);
+                jMsg.high = parseFloat(jMsg.price + Math.floor(Math.random() * 5));
+                jMsg.open = parseFloat(jMsg.price);
+                jMsg.close = jMsg.price - Math.floor(Math.random() * 5);
+                jMsg.low = jMsg.close - Math.floor(Math.random() * 5);
+                jMsg.date = new Date(jMsg.time);
+                jMsg.volume = parseFloat(jMsg.size);
+
+
+                if (jMsg.type === 'received' && jMsg.size > 1) {
+                    data.push(jMsg);
+                    console.log(jMsg);
+                    cb(null, data);
+                    return jMsg;
+                } else {
+                    return;
+                }
+                
             };
 
         };
