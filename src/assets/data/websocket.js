@@ -1,4 +1,4 @@
-var ws;
+/*var ws;
 (function(ws) {
     'use strict';
     fc.data.websocket = function() {
@@ -25,33 +25,38 @@ var ws;
         return ws;
     };
 
-})(ws);
+})(ws);*/
 
 
 
 
-/*(function(fc) {
+(function(fc) {
     'use strict';
 
     fc.data.websocket = function() {
-        /*var coinbaseSocket = new WebSocket('wss://ws-feed.exchange.coinbase.com');
 
-        coinbaseSocket.onmessage = function(event) {
-            console.log(event.data);
-            return event.data;
-            //var msg = JSON.parse(event.data);
-            //var time = new Date(msg.date);
-        };*/
+        var websocket = function(cb) {
+            var coinbaseSocket = new WebSocket('wss://ws-feed.exchange.coinbase.com');
 
-        /*var coinbaseSocket = new WebSocket('wss://ws-feed.exchange.coinbase.com');
+            var msg = {
+                type: 'subscribe',
+                product_id: 'BTC-USD'
+            };
 
-        coinbaseSocket.onmessage = function(event) {
-            console.log(event.data);
-            return event.data;
-            //var msg = JSON.parse(event.data);
-            //var time = new Date(msg.date);
+            coinbaseSocket.onopen = function() {
+                // Send the msg object as a JSON-formatted string.
+                coinbaseSocket.send(JSON.stringify(msg));
+            };
+
+            coinbaseSocket.onmessage = function(event) {
+                console.log(event.data);
+                cb(null, event.data);
+                //var msg = JSON.parse(event.data);
+                //var time = new Date(msg.date);
+            };
+
         };
-        return coinbaseSocket.onmessage;
+        return websocket;
     };
 
-})(fc);*/
+})(fc);

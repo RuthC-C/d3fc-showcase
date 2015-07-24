@@ -131,6 +131,6 @@ module.exports = function(grunt) {
     grunt.registerTask('check:warnOnly', ['jshint:warnOnly', 'jscs:warnOnly']);
     grunt.registerTask('check', ['check:failOnError']);
     grunt.registerTask('ci', ['default']);
-    grunt.registerTask('build', ['check', 'clean', 'copy']);
+    grunt.registerTask('build', ['check:warnOnly', 'clean', 'copy']);
     grunt.registerTask('deploy', ['build', 'gh-pages']);
 };
