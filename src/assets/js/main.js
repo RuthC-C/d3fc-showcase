@@ -10,15 +10,10 @@
         .attr('width', width)
         .attr('height', height);
 
-    var data = fc.data.update()
+    var data = fc.data.coinbase()
         .start(new Date(2015, 2, 1))
         .end(new Date(2015, 7, 22))
         .granularity(100000);
-
-    /*var data = fc.data.coinbase()
-        .start(new Date(2014, 1, 1, 0))
-        .end(new Date(fc.data.update().generator()))
-        .granularity(10000);*/
 
     var render = function(error, data) {
         var chart = fc.chart.linearTimeSeries()

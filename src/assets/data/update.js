@@ -28,19 +28,11 @@
                 //generator.start(newStartDate);
                 generator.end(newEndDate);
 
-                //var currentStartDate = generator.start();
-                //if ()
-                /*var currentGranularity = generator.granularity();
-                var newGranularity = currentGranularity + 200;
-                generator.granularity(newGranularity);*/
-
                 generator(cb);
             }
         };
 
         //var time; //whether using mins/hours/day/moth/etc.
-
-
 
         d3.rebind(updateChart, generator, 'start', 'end', 'granularity');
         return updateChart;
