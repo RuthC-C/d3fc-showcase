@@ -9,7 +9,7 @@
         .attr('width', width)
         .attr('height', height);
 
-    var data = fc.dataGenerator();
+    var data = fc.data.websocket();
 
     var render = function(error, data) {
         var chart = fc.chart.linearTimeSeries()
