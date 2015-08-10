@@ -62,6 +62,12 @@
             data[data.length - 1].date];
     }
 
+    var candlestick = fc.series.candlestick();
+    var ohlc = fc.series.ohlc();
+    var point = fc.series.point();
+    var line = fc.series.line();
+    var area = fc.series.area();
+
     var data = fc.data.random.financial()(250);
 
     // Using golden ratio to make initial display area rectangle into the golden rectangle
@@ -71,6 +77,46 @@
 
     calculateDimensions();
 
+    //candlestick series button
+    function candlestickSeries() {
+        multi.series([gridlines, candlestick, ma, startPriceLine, endPriceLine]);
+        render();
+    }
+
+    container.select('#candlestick-button').on('click', candlestickSeries);
+
+    //Set function for changing chart series
+    function ohlcSeries() {
+        multi.series([gridlines, ohlc, ma, startPriceLine, endPriceLine]);
+        render();
+    }
+
+    container.select('#ohlc-button').on('click', ohlcSeries);
+
+    // Set Reset button event
+    function lineSeries() {
+        multi.series([gridlines, line, ma, startPriceLine, endPriceLine]);
+        render();
+    }
+
+    container.select('#line-button').on('click', lineSeries);
+
+    // Set Reset button event
+    function areaSeries() {
+        multi.series([gridlines, area, ma, startPriceLine, endPriceLine]);
+        render();
+    }
+
+    container.select('#area-button').on('click', areaSeries);
+
+    // Set Reset button event
+    function pointSeries() {
+        multi.series([gridlines, point, ma, startPriceLine, endPriceLine]);
+        render();
+    }
+
+    container.select('#point-button').on('click', pointSeries);
+
     // Set Reset button event
     function resetToLive() {
         timeSeries.xDomain(standardDateDisplay);
@@ -78,6 +124,7 @@
     }
 
     container.select('#reset-button').on('click', resetToLive);
+
 
     // Create main chart and set how much data is initially viewed
     var timeSeries = fc.chart.linearTimeSeries()
@@ -98,14 +145,23 @@
         .value(function(d) { return d.close; })
         .label(function(d) { return 'CLOSE'; });
 
-    var candlestick = fc.series.candlestick();
-
     // Create and apply the Moving Average
     var movingAverage = fc.indicator.algorithm.movingAverage();
 
     // Create a line that renders the result
     var ma = fc.series.line()
         .yValue(function(d) { return d.movingAverage; });
+
+    function render() {
+        svgMain.datum(data)
+            .call(mainChart);
+
+        svgRSI.datum(data)
+            .call(rsiChart);
+
+        svgNav.datum(data)
+            .call(navChart);
+    }
 
     var multi = fc.series.multi()
         .series([gridlines, candlestick, ma, startPriceLine, endPriceLine])
@@ -118,6 +174,9 @@
                 default:
                     return data;
             }
+        })
+        .key(function(series) {
+            return series;
         });
 
     function zoomCall(zoom, data, scale) {
@@ -203,12 +262,10 @@
         .yDomain(yExtent)
         .yTicks(5);
 
-    var area = fc.series.area()
-        .yValue(function(d) { return d.open; })
+    area.yValue(function(d) { return d.open; })
         .y0Value(yExtent[0]);
 
-    var line = fc.series.line()
-        .yValue(function(d) { return d.open; });
+    line.yValue(function(d) { return d.open; });
 
     var brush = d3.svg.brush();
     var navMulti = fc.series.multi().series([area, line, brush]);
@@ -250,17 +307,6 @@
         navTimeSeries.plotArea(navMulti);
         selection.call(navTimeSeries);
     };
-
-    function render() {
-        svgMain.datum(data)
-            .call(mainChart);
-
-        svgRSI.datum(data)
-            .call(rsiChart);
-
-        svgNav.datum(data)
-            .call(navChart);
-    }
 
     function resize() {
         calculateDimensions();
