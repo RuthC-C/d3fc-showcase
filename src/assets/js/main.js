@@ -62,7 +62,6 @@
             data[data.length - 1].date];
     }
 
-    //lots of repitition, lets change this.
     var candlestick = fc.series.candlestick();
     var ohlc = fc.series.ohlc();
     var point = fc.series.point();
@@ -80,7 +79,6 @@
 
     calculateDimensions();
 
-    //default function for series buttons
     function changeSeries(seriesTypeString) {
         switch (seriesTypeString) {
             case 'ohlc':
@@ -106,7 +104,6 @@
         render();
     }
 
-    //select the button that is pressed
     d3.select('#series-buttons')
         .selectAll('.btn')
         .on('click', function() {
