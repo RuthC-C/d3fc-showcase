@@ -102,7 +102,7 @@
                 currentSeries = candlestick;
                 break;
         }
-        multi.series([gridlines, currentSeries.firstChild.firstChild, ma, startPriceLine, endPriceLine]);
+        multi.series([gridlines, currentSeries, ma, startPriceLine, endPriceLine]);
         render();
     }
 
