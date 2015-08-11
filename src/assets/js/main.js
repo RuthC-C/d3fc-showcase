@@ -62,11 +62,14 @@
             data[data.length - 1].date];
     }
 
+    //lots of repitition, lets change this.
     var candlestick = fc.series.candlestick();
     var ohlc = fc.series.ohlc();
     var point = fc.series.point();
     var line = fc.series.line();
     var area = fc.series.area();
+
+    var currentSeries = candlestick;
 
     var data = fc.data.random.financial()(250);
 
@@ -77,45 +80,37 @@
 
     calculateDimensions();
 
-    //candlestick series button
-    function candlestickSeries() {
-        multi.series([gridlines, candlestick, ma, startPriceLine, endPriceLine]);
+    //default function for series buttons
+    function changeSeries() {
+        multi.series([gridlines, currentSeries, ma, startPriceLine, endPriceLine]);
         render();
     }
 
-    container.select('#candlestick-button').on('click', candlestickSeries);
+    container.select('#candlestick-button').on('click', function() {
+        currentSeries = candlestick;
+        changeSeries();
+    });
 
-    //Set function for changing chart series
-    function ohlcSeries() {
-        multi.series([gridlines, ohlc, ma, startPriceLine, endPriceLine]);
-        render();
-    }
+    container.select('#ohlc-button').on('click', function() {
+        currentSeries = ohlc;
+        changeSeries();
+    });
 
-    container.select('#ohlc-button').on('click', ohlcSeries);
+    container.select('#line-button').on('click', function() {
+        currentSeries = line;
+        changeSeries();
+    });
 
-    // Set Reset button event
-    function lineSeries() {
-        multi.series([gridlines, line, ma, startPriceLine, endPriceLine]);
-        render();
-    }
+    container.select('#area-button').on('click', function() {
+        currentSeries = area;
+        changeSeries();
+    });
 
-    container.select('#line-button').on('click', lineSeries);
+    container.select('#point-button').on('click', function() {
+        currentSeries = point;
+        changeSeries();
+    });
 
-    // Set Reset button event
-    function areaSeries() {
-        multi.series([gridlines, area, ma, startPriceLine, endPriceLine]);
-        render();
-    }
-
-    container.select('#area-button').on('click', areaSeries);
-
-    // Set Reset button event
-    function pointSeries() {
-        multi.series([gridlines, point, ma, startPriceLine, endPriceLine]);
-        render();
-    }
-
-    container.select('#point-button').on('click', pointSeries);
 
     // Set Reset button event
     function resetToLive() {
@@ -124,7 +119,6 @@
     }
 
     container.select('#reset-button').on('click', resetToLive);
-
 
     // Create main chart and set how much data is initially viewed
     var timeSeries = fc.chart.linearTimeSeries()
@@ -164,7 +158,7 @@
     }
 
     var multi = fc.series.multi()
-        .series([gridlines, candlestick, ma, startPriceLine, endPriceLine])
+        .series([gridlines, currentSeries, ma, startPriceLine, endPriceLine])
         .mapping(function(series) {
             switch (series) {
                 case startPriceLine:
@@ -316,5 +310,6 @@
     d3.select(window).on('resize', resize);
 
     resize();
+
 
 })(d3, fc);
