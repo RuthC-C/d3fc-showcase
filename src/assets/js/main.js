@@ -174,8 +174,14 @@
                     return data;
             }
         })
-        .key(function(series) {
-            return series;
+        .key(function(series, ma) {
+            switch (series) {
+                case line:
+                    return series, ma;
+                default:
+                    return series;
+            }
+            //return series;
         });
 
     function zoomCall(zoom, data, scale) {
