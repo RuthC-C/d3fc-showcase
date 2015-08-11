@@ -81,46 +81,41 @@
     calculateDimensions();
 
     //default function for series buttons
-    function changeSeries() {
+    function changeSeries(seriesTypeString) {
+        switch (seriesTypeString) {
+            case 'ohlc':
+                currentSeries = ohlc;
+                break;
+            case 'candlestick':
+                currentSeries = candlestick;
+                break;
+            case 'line':
+                currentSeries = line;
+                break;
+            case 'point':
+                currentSeries = point;
+                break;
+            case 'area':
+                currentSeries = area;
+                break;
+            default:
+                currentSeries = candlestick;
+                break;
+        }
         multi.series([gridlines, currentSeries, ma, startPriceLine, endPriceLine]);
         render();
     }
 
-    /*d3.selectAll(seriesButton)
-        .attr('click', function() {
-            currentSeries = seriesButton;
-            changeSeries();
-        })
+    //select the button that is pressed
+    d3.select('#series-buttons')
+        .selectAll('.btn')
         .on('click', function() {
-            currentSeries = seriesButton;
-            changeSeries();
-        });*/
-
-    container.select('#candlestick-button').on('click', function() {
-        currentSeries = candlestick;
-        changeSeries();
-    });
-
-    container.select('#ohlc-button').on('click', function() {
-        currentSeries = ohlc;
-        changeSeries();
-    });
-
-    container.select('#line-button').on('click', function() {
-        currentSeries = line;
-        changeSeries();
-    });
-
-    container.select('#area-button').on('click', function() {
-        currentSeries = area;
-        changeSeries();
-    });
-
-    container.select('#point-button').on('click', function() {
-        currentSeries = point;
-        changeSeries();
-    });
-
+            var seriesTypeString = d3.select(this)
+                .select('input')
+                .node()
+                .value;
+            changeSeries(seriesTypeString);
+        });
 
     // Set Reset button event
     function resetToLive() {
