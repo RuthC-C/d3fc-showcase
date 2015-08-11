@@ -100,7 +100,7 @@
                 currentSeries = candlestick;
                 break;
         }
-        multi.series([gridlines, currentSeries, ma, startPriceLine, endPriceLine]);
+        multi.series([gridlines, ma, currentSeries, startPriceLine, endPriceLine]);
         render();
     }
 
@@ -163,7 +163,7 @@
     }
 
     var multi = fc.series.multi()
-        .series([gridlines, currentSeries, ma, startPriceLine, endPriceLine])
+        .series([gridlines, ma, currentSeries, startPriceLine, endPriceLine])
         .mapping(function(series) {
             switch (series) {
                 case startPriceLine:
