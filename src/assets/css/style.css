@@ -12,13 +12,17 @@
     margin-right: auto;
   }
 
-  #reset-button{
+  #reset-button {
     display: block;
     border: 8px;
     padding-bottom:5px;
   }
 
-  #candlestick, #ohlc, #line, #area, #point{
+  .pull-right {
+    float: right !important;
+  }
+
+  #candlestick, #ohlc, #line, #area, #point {
     float:left;
   }
 

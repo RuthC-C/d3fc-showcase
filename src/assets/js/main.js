@@ -86,6 +86,16 @@
         render();
     }
 
+    /*d3.selectAll(seriesButton)
+        .attr('click', function() {
+            currentSeries = seriesButton;
+            changeSeries();
+        })
+        .on('click', function() {
+            currentSeries = seriesButton;
+            changeSeries();
+        });*/
+
     container.select('#candlestick-button').on('click', function() {
         currentSeries = candlestick;
         changeSeries();
