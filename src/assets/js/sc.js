@@ -13,5 +13,8 @@
                 coinbase: {}
             }
         }
+        primarychart: {
+            feature: {}
+        }
     };
 })();

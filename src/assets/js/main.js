@@ -68,7 +68,7 @@
     var line = fc.series.line();
     var area = fc.series.area();
 
-    var currentSeries = candlestick;
+    var currentSeries = sc.primarychart.feature.series();
 
     var data = fc.data.random.financial()(250);
 
@@ -78,41 +78,6 @@
     var standardDateDisplay;
 
     calculateDimensions();
-
-    function changeSeries(seriesTypeString) {
-        switch (seriesTypeString) {
-            case 'ohlc':
-                currentSeries = ohlc;
-                break;
-            case 'candlestick':
-                currentSeries = candlestick;
-                break;
-            case 'line':
-                currentSeries = line;
-                break;
-            case 'point':
-                currentSeries = point;
-                break;
-            case 'area':
-                currentSeries = area;
-                break;
-            default:
-                currentSeries = candlestick;
-                break;
-        }
-        multi.series([gridlines, ma, currentSeries, closeAxisAnnotation]);
-        render();
-    }
-
-    d3.select('#series-buttons')
-        .selectAll('.btn')
-        .on('click', function() {
-            var seriesTypeString = d3.select(this)
-                .select('input')
-                .node()
-                .value;
-            changeSeries(seriesTypeString);
-        });
 
     // Set Reset button event
     function resetToLive() {
