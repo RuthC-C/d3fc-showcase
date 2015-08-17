@@ -63,13 +63,17 @@
             changeSeries(seriesTypeString);
         });
 
-    // Set Reset button event
-    function resetToLive() {
-        timeSeries.xDomain(standardDateDisplay);
-        render();
-    }
+    // // Set Reset button event
+    // function resetToLive() {
+    // timeSeries.xDomain(standardDateDisplay);
+    // render();
+    // }
 
-    container.select('#reset-button').on('click', resetToLive);
+    container.select('#reset-button').on('click', function() {
+        sc.menu.resetToLive(standardDateDisplay);
+        render();
+    });
+
 
     // Create main chart and set how much data is initially viewed
     var timeSeries = fc.chart.linearTimeSeries()

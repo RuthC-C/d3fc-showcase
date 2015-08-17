@@ -13,6 +13,7 @@
                 coinbase: {}
             }
         },
-        util: {}
+        util: {},
+        menu: {}
     };
 })();
