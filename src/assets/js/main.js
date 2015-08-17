@@ -9,8 +9,6 @@
     var svgNav = container.select('svg.nav');
 
     var candlestick = fc.series.candlestick();
-    var ohlc = fc.series.ohlc();
-    var point = fc.series.point();
     var line = fc.series.line();
     var area = fc.series.area();
 
@@ -28,40 +26,6 @@
     var standardDateDisplay = [data[Math.floor((1 - navAspect * goldenRatio) * data.length)].date,
         data[data.length - 1].date];
 
-    function changeSeries(seriesTypeString) {
-        switch (seriesTypeString) {
-            case 'ohlc':
-                currentSeries = ohlc;
-                break;
-            case 'candlestick':
-                currentSeries = candlestick;
-                break;
-            case 'line':
-                currentSeries = line;
-                break;
-            case 'point':
-                currentSeries = point;
-                break;
-            case 'area':
-                currentSeries = area;
-                break;
-            default:
-                currentSeries = candlestick;
-                break;
-        }
-        multi.series([gridlines, ma, currentSeries, closeAxisAnnotation]);
-        render();
-    }
-
-    d3.select('#series-buttons')
-        .selectAll('.btn')
-        .on('click', function() {
-            var seriesTypeString = d3.select(this)
-                .select('input')
-                .node()
-                .value;
-            changeSeries(seriesTypeString);
-        });
 
     // Set Reset button event
     function resetToLive() {
@@ -163,6 +127,9 @@
             render();
         };
     }
+
+    sc.menu.changeSeries();
+    render();
 
     var mainChart = function(selection) {
         data = selection.datum();
