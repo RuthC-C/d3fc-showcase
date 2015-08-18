@@ -73,19 +73,22 @@
             render();
         });
 
-    // Set Reset button event
-    function resetToLive() {
-        // Using golden ratio to make initial display area rectangle into the golden rectangle
-        var goldenRatio = 1.618;
-        var navAspect = parseInt(svgNav.style('height'), 10) / svgNav.attr('width');
-        var data = dataModel.data;
-        var standardDateDisplay = [data[Math.floor((1 - navAspect * goldenRatio) * data.length)].date,
-            data[data.length - 1].date];
-        onViewChanged(standardDateDisplay);
-        render();
-    }
+    // // Set Reset button event
+    // function resetToLive() {
+    // // Using golden ratio to make initial display area rectangle into the golden rectangle
+    // var goldenRatio = 1.618;
+    // var navAspect = parseInt(svgNav.style('height'), 10) / svgNav.attr('width');
+    // var data = dataModel.data;
+    // var standardDateDisplay = [data[Math.floor((1 - navAspect * goldenRatio) * data.length)].date,
+    // data[data.length - 1].date];
+    // onViewChanged(standardDateDisplay);
+    // render();
+    // }
 
-    container.select('#reset-button').on('click', resetToLive);
+    container.select('#reset-button').on('click', function() {
+        sc.menu.resetToLive(dataModel, onViewChanged);
+        render();
+    });
 
     function render() {
         svgMain.datum(dataModel)
@@ -105,7 +108,7 @@
 
     d3.select(window).on('resize', resize);
 
-    resetToLive();
+    sc.menu.resetToLive(dataModel, onViewChanged);
     resize();
 
 })(d3, fc, sc);
