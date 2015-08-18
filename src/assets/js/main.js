@@ -63,14 +63,8 @@
             changeSeries(seriesTypeString);
         });
 
-    // // Set Reset button event
-    // function resetToLive() {
-    // timeSeries.xDomain(standardDateDisplay);
-    // render();
-    // }
-
     container.select('#reset-button').on('click', function() {
-        sc.menu.resetToLive(standardDateDisplay);
+        sc.menu.resetToLive(standardDateDisplay, timeSeries);
         render();
     });
 
