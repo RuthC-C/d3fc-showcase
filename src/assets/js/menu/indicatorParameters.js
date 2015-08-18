@@ -1,12 +1,26 @@
-(function(d3, fc, sc) {
+(function(d3, fc) {
     'use strict';
-    
+
     var multiplier;
     var slidingWindow = fc.indicator.algorithm.calculator.slidingWindow();
-    var indicatorName;
-    
-    
-    sc.menu.indicatorParameters = function(indicator) {
-        slidingWindow.accumulator(function(d) { return d.close; });
+    //var indicatorName;
+    var bollinger;
+
+    function windowSize(){
+        
     }
-})(d3, fc, sc);
+
+    sc.menu.indicatorParameters = function(indicator) {
+        if (indicator === bollinger) {
+            slidingWindow.accumulator(function(values) {
+                var avg = d3.mean(values);
+                var stdDev = d3.deviation(values);
+                return {
+                    upper: avg + multiplier * stdDev,
+                    average: avg,
+                    lower: avg - multiplier * stdDev
+                };
+            });
+        }
+    };
+})(d3, fc);

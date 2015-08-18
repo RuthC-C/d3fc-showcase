@@ -37,9 +37,12 @@
             .xTicks(0);
 
         // Create and apply the Moving Average
-        var movingAverage = fc.indicator.algorithm.movingAverage();
+        var movingAverage = fc.indicator.algorithm.movingAverage()
+            .value(function(d) { return d.close; })
+            .windowSize(1);
 
-        var bollingerAlgorithm = fc.indicator.algorithm.bollingerBands();
+        var bollingerAlgorithm = fc.indicator.algorithm.bollingerBands()
+            .windowSize(40);
 
         var priceFormat = d3.format('.2f');
 

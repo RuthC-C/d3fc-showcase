@@ -35,6 +35,7 @@
     var primaryChart = sc.chart.primaryChart();
     var rsiChart = sc.chart.rsiChart();
     var navChart = sc.chart.navChart();
+    //var indicatorParameters = sc.menu.indicatorParameters();
 
     function onViewChanged(domain) {
         dataModel.viewDomain = [domain[0], domain[1]];
@@ -101,6 +102,7 @@
         primaryChart.changeIndicator(currentIndicator, currentSeries);
     }
 
+    //window size scroll bar thing..
     d3.select('#indicator-buttons')
         .selectAll('.btn')
         .on('click', function() {
@@ -111,6 +113,20 @@
             changeIndicator(indicatorType);
             render();
         });
+        
+    d3.select('windowSize').on('input', function() {
+        update(+this.value);
+    });
+    
+    update(20);
+    
+    function update(windowSize) {
+        d3.select('#windowSize-value').text(windowSize);
+        d3.select('#windowSize').property('value', windowSize);
+        
+        container.selectAll('indicator')
+            .attr('r', windowSize);
+    }
 
     // Set Reset button event
     function resetToLive() {
