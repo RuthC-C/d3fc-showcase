@@ -9,7 +9,7 @@
 
     <link rel="stylesheet" href="assets/css/style.css">
 
-    <script src="assets/js/d3.js"></script> 
+    <script src="assets/js/d3.js"></script>
     <script src="assets/js/Layout.js"></script>
     <script src="assets/js/d3fc.js"></script>
 
@@ -17,7 +17,7 @@
     <script src="assets/js/bootstrap.min.js"></script>
   </head>
   <body>
-  
+
     <div class="container" id="chart-example">
 
       <div class="row" id="head-row">
@@ -39,10 +39,10 @@
               <input type="radio" name="options" value="area"> Area
             </label>
           </div>
-          
+
           <div id="indicator-buttons" class="btn-group" data-toggle="buttons">
             <label class="btn btn-default active" id="no-indicator-button">
-              <input type="radio" name="indicators" value="no-indicator" checked>None 
+              <input type="radio" name="indicators" value="no-indicator" checked>None
             </label>
             <label class="btn btn-default" id="ma-button">
               <input type="radio" name="indicators" value="movingAverage" >Moving Average
@@ -51,11 +51,16 @@
               <input type="radio" name="indicators" value="bollinger">Bollinger Bands
             </label>
           </div>
-          
-          <label for="windowSize" style="display: inline-block;">
+
+          <div id="window-slider" class="btn-group" for="windowSize" >
             Indicator Window Size = <span id="windowSize-value"></span>
             <input type="range" min="1" max="100" id="windowSize">
-          </label>
+          </div>
+
+          <!--<div id="accumulator-slider" class="btn-group" for="accumulator">
+            Accumulator = <span id="accumulator-value"></span>
+            <input type="range" min="1" max="20" id="accumulator">
+          </div>-->
 
           <div class="pull-right">
             <div id="reset-button">
@@ -70,14 +75,14 @@
           <svg class="chart primary"></svg>
         </div>
       </div>
-        
-      <div class="row"> 
+
+      <div class="row">
         <div class="col-md-12">
           <svg class="chart rsi"></svg>
         </div>
       </div>
-        
-      <div class="row"> 
+
+      <div class="row">
         <div class="col-md-12">
           <svg class="chart nav"></svg>
         </div>

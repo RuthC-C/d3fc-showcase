@@ -140,6 +140,16 @@
             return primaryChart;
         };
 
+        /*primaryChart.changeAccumulator = function(value, indicator) {
+            if (indicator === bollinger) {
+
+            } else {
+                if (indicator === movingAverage) {
+
+                }
+            }
+        };*/
+
         return primaryChart;
     };
 })(sc);
