@@ -36,13 +36,24 @@
             .yTicks(5)
             .xTicks(0);
 
+
         // Create and apply the Moving Average
         var movingAverage = fc.indicator.algorithm.movingAverage()
-            .value(function(d) { return d.close; })
-            .windowSize(1);
+            .value(function(d) { return d.close; });
 
-        var bollingerAlgorithm = fc.indicator.algorithm.bollingerBands()
-            .windowSize(40);
+        var bollingerAlgorithm = fc.indicator.algorithm.bollingerBands();
+
+        /*d3.select('windowSize').on('input', function() {
+            update(+this.value);
+        });
+
+        function update() {
+            d3.select('#windowSize-value').text(windowSize);
+            d3.select('#windowSize').property('value', windowSize);
+
+            movingAverage.windowSize(windowSize);
+            bollingerAlgorithm.windowSize(windowSize);
+        }*/
 
         var priceFormat = d3.format('.2f');
 
@@ -119,6 +130,14 @@
             }
             return primaryChart;
 
+        };
+
+        primaryChart.changeWindowSize = function(value, indicator) {
+            if (indicator != null) {
+                movingAverage.windowSize(value);
+                bollingerAlgorithm.windowSize(value);
+            }
+            return primaryChart;
         };
 
         return primaryChart;

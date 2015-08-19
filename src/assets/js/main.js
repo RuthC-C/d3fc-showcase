@@ -113,20 +113,6 @@
             changeIndicator(indicatorType);
             render();
         });
-        
-    d3.select('windowSize').on('input', function() {
-        update(+this.value);
-    });
-    
-    update(20);
-    
-    function update(windowSize) {
-        d3.select('#windowSize-value').text(windowSize);
-        d3.select('#windowSize').property('value', windowSize);
-        
-        container.selectAll('indicator')
-            .attr('r', windowSize);
-    }
 
     // Set Reset button event
     function resetToLive() {
@@ -141,6 +127,20 @@
     }
 
     container.select('#reset-button').on('click', resetToLive);
+
+    d3.select('#windowSize').on('input', function() {
+        update(+this.value);
+    });
+
+    function update(windowSize) {
+        d3.select('#windowSize-value').text(windowSize);
+        d3.select('#windowSize').property('value', windowSize);
+
+        primaryChart.changeWindowSize(windowSize, currentIndicator);
+        render();
+    }
+
+    update(20, currentIndicator);
 
     function render() {
         svgMain.datum(dataModel)

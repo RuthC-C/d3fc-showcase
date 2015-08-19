@@ -6,9 +6,9 @@
     //var indicatorName;
     var bollinger;
 
-    function windowSize(){
-        
-    }
+    // function windowSize(){
+
+    // }
 
     sc.menu.indicatorParameters = function(indicator) {
         if (indicator === bollinger) {
