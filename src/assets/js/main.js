@@ -16,6 +16,8 @@
     var area = fc.series.area();
     var currentIndicator;
     var currentSeries;
+    var high;
+    var low;
 
     var dataModel = {
         data: fc.data.random.financial()(250),
@@ -99,7 +101,7 @@
                 currentIndicator = null;
                 break;
         }
-        primaryChart.changeIndicator(currentIndicator, currentSeries);
+        primaryChart.changeIndicator(currentSeries, currentIndicator);
     }
 
     //window size scroll bar thing..
@@ -141,6 +143,49 @@
     }
 
     update(20, currentIndicator);
+
+    d3.select('#indicatorValue-buttons')
+        .selectAll('.btn')
+        .on('click', function() {
+        var indicatorValue = d3.select(this)
+        .select('input')
+            .node()
+            .value;
+        changeIndicatorValue(indicatorValue);
+    });
+
+    function changeIndicatorValue(indicatorValue) {
+        switch (indicatorValue) {
+            case 'open':
+                indicatorValue = open;
+                break;
+            case 'close':
+                indicatorValue = close;
+                break;
+            case 'high':
+                indicatorValue = high;
+                break;
+            case 'low':
+                indicatorValue = low;
+                break;
+            case 'high-low':
+                indicatorValue = high-low;
+                break;
+            case 'high-low-close':
+                indicatorValue = high-low-close;
+                break;
+            case 'all-four':
+                indicatorValue = all-four;
+                break;
+            default:
+                indicatorValue = close;
+                break;
+        }
+        primaryChart.changeIndicatorValue(indicatorValue, currentIndicator);
+        render();
+    }
+
+    //changeIndicatorValue(close);
 
     function render() {
         svgMain.datum(dataModel)

@@ -22,6 +22,7 @@
 
       <div class="row" id="head-row">
         <div class="col-md-12">
+
           <div id="series-buttons" class="btn-group" data-toggle="buttons">
             <label class="btn btn-default active" id="candlestick-button">
               <input type="radio" name="options" value="candlestick" checked> Candlestick
@@ -55,6 +56,30 @@
           <div id="window-slider" class="btn-group" for="windowSize" >
             Indicator Window Size = <span id="windowSize-value"></span>
             <input type="range" min="1" max="100" id="windowSize">
+          </div>
+
+          <div id="indicatorValue-buttons" class="btn-group" data-toggle="buttons">
+            <label class="btn btn-default active" id="close-button">
+              <input type="radio" name="ohlc" value="close">Close
+            </label>
+            <label class="btn btn-default" id="low-button">
+              <input type="radio" name="ohlc" value="low">Low
+            </label>
+            <label class="btn btn-default" id="high-button">
+              <input type="radio" name="ohlc" value="high">High
+            </label>
+            <label class="btn btn-default" id="open-button">
+              <input type="radio" name="ohlc" value="open">Open
+            </label>
+            <label class="btn btn-default" id="high-low-button">
+              <input type="radio" name="ohlc" value="high-low">High and Low
+            </label>
+            <label class="btn btn-default" id="close-button">
+              <input type="radio" name="ohlc" value="high-low-close">Typical Prices
+            </label>
+            <label class="btn btn-default" id="close-button">
+              <input type="radio" name="ohlc" value="all-four">All Out
+            </label>
           </div>
 
           <!--<div id="accumulator-slider" class="btn-group" for="accumulator">

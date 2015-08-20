@@ -38,22 +38,11 @@
 
 
         // Create and apply the Moving Average
-        var movingAverage = fc.indicator.algorithm.movingAverage()
-            .value(function(d) { return d.close; });
+        var movingAverage = fc.indicator.algorithm.movingAverage();
 
         var bollingerAlgorithm = fc.indicator.algorithm.bollingerBands();
-
-        /*d3.select('windowSize').on('input', function() {
-            update(+this.value);
-        });
-
-        function update() {
-            d3.select('#windowSize-value').text(windowSize);
-            d3.select('#windowSize').property('value', windowSize);
-
-            movingAverage.windowSize(windowSize);
-            bollingerAlgorithm.windowSize(windowSize);
-        }*/
+        var high;
+        var low;
 
         var priceFormat = d3.format('.2f');
 
@@ -122,7 +111,7 @@
             return primaryChart;
         };
 
-        primaryChart.changeIndicator = function(indicator, series) {
+        primaryChart.changeIndicator = function(series, indicator) {
             if (indicator == null) {
                 multi.series([gridlines, series, closeAxisAnnotation]);
             } else {
@@ -139,6 +128,59 @@
             }
             return primaryChart;
         };
+
+        primaryChart.changeIndicatorValue = function(value, indicator) {
+            if (value === close) {
+                movingAverage.value(function(d) { return d.close; });
+            } else {
+                if (value === high) {
+                    movingAverage.value(function(d) { return d.high; });
+                } else {
+                    if (value === low) {
+                        movingAverage.value(function(d) { return d.low; });
+                    } else {
+                        if (value === open) {
+                            movingAverage.value(function(d) { return d.open; });
+                        } else {
+                            if (value === high-low) {
+                                var highLow = (d.high + d.low)/2 ;
+                                movingAverage.value(function(d) { return highLow; });
+                            } else {
+                                if (value === high-low-close) {
+                                    movingAverage.value(function(d) { return d.open; });
+                                } else {
+                                    if (value === all-four) {
+                                        movingAverage.value(function(d) { return d.open; });
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        /*primaryChart.changeIndicatorValue = function(value, indicator) {
+            if (indicator === movingAverage) {
+                if (value === 'close') {
+                    movingAverage.value(function(d) { return d.close; });
+                }
+                if (value === 'high-low') {
+                    //var average = movingAverage.value(function(d) { return d3.mean(d.high, d.low); });
+                    //movingAverage.accumulator(average);
+                    movingAverage.value(function(d) { return d3.mean(d.high, d.low); });
+                }
+                if (value === 'typical-price') {
+                    movingAverage.value(function(d) { return d3.mean(d.high, d.low, d.close); });
+                }
+                if (value === 'all-four') {
+                    movingAverage.value(function(d) { return d3.mean(d.open, d.high, d.low, d.close); });
+                }
+
+            }
+            return primaryChart;
+        };*/
+
 
         /*primaryChart.changeAccumulator = function(value, indicator) {
             if (indicator === bollinger) {
