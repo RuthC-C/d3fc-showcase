@@ -34,6 +34,7 @@
     var priceOptions = sc.menu.optionGenerator()
         .on('optionChange', function(priceType) {
             primaryChart.calculateIndicatorPrice(priceType.price);
+            render();
         });
 
     function onViewChanged(domain) {
@@ -88,10 +89,10 @@
         this.price = price;
     };
 
-    var close = new PriceType('Close', 'close', close);
-    var open = new PriceType('Open', 'open', open);
-    var high = new PriceType('High', 'high', high);
-    var low = new PriceType('Low', 'low', low);
+    var close = new PriceType('Close', 'close', function(d) { return d.close;});
+    var open = new PriceType('Open', 'open', function(d) { return d.open;});
+    var high = new PriceType('High', 'high', function(d) { return d.high;});
+    var low = new PriceType('Low', 'low', function(d) { return d.low;});
 
     container.select('#price-buttons')
         .datum([close, open, high, low])

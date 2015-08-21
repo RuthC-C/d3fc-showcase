@@ -124,14 +124,7 @@
         };
 
         primaryChart.calculateIndicatorPrice = function(price) {
-            if (price === close) {
-                movingAverage.value(function(d) {return d.close; });
-                return primaryChart;
-            } else
-            if (price === open) {
-                movingAverage.value(function(d) {return d.open; });
-                return primaryChart;
-            }
+            movingAverage.value(price);
             return primaryChart;
         };
 
