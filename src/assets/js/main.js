@@ -31,6 +31,11 @@
             render();
         });
 
+    var priceOptions = sc.menu.optionGenerator()
+        .on('optionChange', function(priceType) {
+            primaryChart.calculateIndicatorPrice(priceType.price);
+        });
+
     function onViewChanged(domain) {
         dataModel.viewDomain = [domain[0], domain[1]];
         render();
@@ -76,6 +81,23 @@
         .datum([noIndicator, movingAverageIndicator, bollingerIndicator])
         .call(indicatorOptions);
 
+
+    var PriceType = function(displayString, valueString, price) {
+        this.displayString = displayString;
+        this.valueString = valueString;
+        this.price = price;
+    };
+
+    var close = new PriceType('Close', 'close', close);
+    var open = new PriceType('Open', 'open', open);
+    var high = new PriceType('High', 'high', high);
+    var low = new PriceType('Low', 'low', low);
+
+    container.select('#price-buttons')
+        .datum([close, open, high, low])
+        .call(priceOptions);
+
+
     var secondaryChartOptions = sc.menu.optionGenerator()
         .on('optionChange', function(secondaryChartType) {
             secondaryChart = secondaryChartType.chart;
@@ -97,7 +119,6 @@
     container.select('#secondary-chart-buttons')
         .datum([noChart, rsiChart])
         .call(secondaryChartOptions);
-
     // Set Reset button event
     function resetToLive() {
         // Using golden ratio to make initial display area rectangle into the golden rectangle
