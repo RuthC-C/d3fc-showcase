@@ -68,12 +68,17 @@
         })
         .yValue(function(d) { return d.movingAverage; });
 
+    var exponentialMovingAverage = fc.series.line()
+        .yValue(function(d) { return d.exponentialMovingAverage; });
+
     var noIndicator = new IndicatorType('None', 'no-indicator', null);
     var movingAverageIndicator = new IndicatorType('Moving Average', 'movingAverage', movingAverage);
     var bollingerIndicator = new IndicatorType('Bollinger Bands', 'bollinger', fc.indicator.renderer.bollingerBands());
+    var exponentialMovingAverageIndicator = new IndicatorType('Exponential Moving Average', 'exponential',
+        exponentialMovingAverage);
 
     container.select('#indicator-buttons')
-        .datum([noIndicator, movingAverageIndicator, bollingerIndicator])
+        .datum([noIndicator, movingAverageIndicator, bollingerIndicator, exponentialMovingAverageIndicator])
         .call(indicatorOptions);
 
     var secondaryChartOptions = sc.menu.optionGenerator()

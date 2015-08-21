@@ -44,6 +44,8 @@
 
         var bollingerAlgorithm = fc.indicator.algorithm.bollingerBands();
 
+        var exponentialMovingAverage = fc.indicator.algorithm.exponentialMovingAverage();
+
         var priceFormat = d3.format('.2f');
 
         var closeAxisAnnotation = fc.annotation.line()
@@ -70,6 +72,7 @@
 
             movingAverage(data);
             bollingerAlgorithm(data);
+            exponentialMovingAverage(data);
 
             updateMultiSeries();
 
