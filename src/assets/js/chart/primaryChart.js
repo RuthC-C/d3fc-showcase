@@ -125,6 +125,7 @@
 
         primaryChart.calculateIndicatorPrice = function(price) {
             movingAverage.value(price);
+            bollingerAlgorithm.value(price);
             return primaryChart;
         };
 
