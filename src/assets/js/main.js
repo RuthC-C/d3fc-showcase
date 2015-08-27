@@ -68,13 +68,9 @@
         })
         .yValue(function(d) { return d.movingAverage; });
 
-    var bollingerBands = fc.indicator.renderer.bollingerBands();
-    d3.select(bollingerBands.root)
-        .attr();
-
     var noIndicator = new IndicatorType('None', 'no-indicator', null);
     var movingAverageIndicator = new IndicatorType('Moving Average', 'movingAverage', movingAverage);
-    var bollingerIndicator = new IndicatorType('Bollinger Bands', 'bollinger', bollingerBands);
+    var bollingerIndicator = new IndicatorType('Bollinger Bands', 'bollinger', fc.indicator.renderer.bollingerBands());
 
     container.select('#indicator-buttons')
         .datum([noIndicator, movingAverageIndicator, bollingerIndicator])
