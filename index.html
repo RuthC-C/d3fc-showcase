@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A cross-platform financial charting application to showcase the functionality of d3fc components">
+    <title>d3fc Showcase</title>
+
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <script src="assets/js/d3.js"></script>
+    <script src="assets/js/css-layout.js"></script>
+    <script src="assets/js/d3fc.js"></script>
+
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+
+    <div class="container" id="app-container">
+      <div class="row menu" id="head-row">
+        <div class="col-md-2">
+          <select id="type-selection" selected="type" class="form-control">
+            <option value="generated">Data generator</option>
+            <option value="bitcoin">Bitcoin data</option>
+          </select>
+          <select id="period-selection" selected="period" class="form-control">
+            <option value="3600">1 hr</option>
+            <option value="300">5 min</option>
+            <option value="60">1 min</option>
+          </select>
+        </div>
+        <div class="col-md-9">
+          <div id="series-buttons" class="btn-group" data-toggle="buttons"></div>
+          <div id="indicator-buttons" class="btn-group" data-toggle="buttons"></div>
+          <div id="secondary-chart-buttons" class="btn-group" data-toggle="buttons"></div>
+        </div>
+        <div class="col-md-1">
+          <div class="pull-right" id="reset-button">
+            <button class="btn btn-default" type="button">Reset</button>
+          </div>
+        </div>
+      </div>
+      <div class="row" id="primary-row">
+        <div class="col-md-12">
+          <svg class="chart primary"></svg>
+        </div>
+      </div>        
+      <div class="row" id="secondary-row"> 
+        <div class="col-md-12">
+          <svg class="chart secondary"></svg>
+        </div>
+      </div>
+     <div class="row" id="x-axis-row"> 
+        <div class="col-md-12">
+          <svg class="chart x-axis"></svg>
+        </div>
+      </div>        
+      <div class="row" id="nav-row">
+        <div class="col-md-12">
+          <svg class="chart nav"></svg>
+        </div>
+      </div>
+    </div>
+
+    <script src="assets/js/app.js"></script>
+    <script src="//localhost:35729/livereload.js"></script>
+  </body>
+</html>
