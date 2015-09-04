@@ -148,6 +148,12 @@
             return primaryChart;
         };
 
+        primaryChart.changeWindowSize = function(windowSize) {
+            movingAverage.windowSize(windowSize);
+            bollingerAlgorithm.windowSize(windowSize);
+            return primaryChart;
+        };
+
         return primaryChart;
     };
 })(d3, fc, sc);

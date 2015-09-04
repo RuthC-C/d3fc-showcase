@@ -118,6 +118,10 @@
         .on('periodChange', function(period) {
             dataModel.period = period;
             dataInterface(dataModel.period);
+        })
+        .on('windowSizeChanged', function(windowSize) {
+            primaryChart.changeWindowSize(windowSize);
+            render();
         });
 
     container.select('.menu')
@@ -130,4 +134,5 @@
     dataInterface.generateData();
     sc.util.calculateDimensions(container, secondaryChart);
     resetToLive();
+    resize();
 })(d3, fc, sc);

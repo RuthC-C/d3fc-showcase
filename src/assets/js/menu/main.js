@@ -3,11 +3,25 @@
 
     sc.menu.main = function() {
 
+        var movingAverage = fc.series.line()
+            .decorate(function(select) {
+                select.enter()
+                    .classed('movingAverage', true);
+            })
+            .yValue(function(d) { return d.movingAverage; });
+
+        var noIndicator = sc.menu.option('None', 'no-indicator', null);
+        var movingAverageIndicator = sc.menu.option('Moving Average', 'movingAverage', movingAverage);
+        var bollingerIndicator = sc.menu.option('Bollinger Bands', 'bollinger', fc.indicator.renderer.bollingerBands());
+        var indicators = [noIndicator, movingAverageIndicator, bollingerIndicator];
+        var indicatorsNoNone = [movingAverageIndicator, bollingerIndicator];
+
         var dispatch = d3.dispatch('primaryChartSeriesChange',
             'primaryChartIndicatorChange',
             'secondaryChartChange',
             'dataTypeChange',
-            'periodChange');
+            'periodChange',
+            'windowSizeChanged');
 
         function setPeriodChangeVisibility(visible) {
             var visibility = visible ? 'visible' : 'hidden';
@@ -23,6 +37,7 @@
             });
 
         var primaryChartIndicatorOptions = sc.menu.primaryChart.indicators()
+            .indicators(indicators)
             .on('primaryChartIndicatorChange', function(indicator) {
                 dispatch.primaryChartIndicatorChange(indicator);
             });
@@ -49,6 +64,12 @@
             });
         };
 
+        var changeWindowSize = sc.menu.indicatorWindowSize()
+            .indicators(indicatorsNoNone)
+            .on('windowSizeChanged', function(windowSize) {
+                dispatch.windowSizeChanged(windowSize);
+            });
+
         var main = function(selection) {
             selection.each(function() {
                 var selection = d3.select(this);
@@ -62,6 +83,8 @@
                     .call(primaryChartIndicatorOptions);
                 selection.select('#secondary-chart-buttons')
                     .call(secondaryChartOptions);
+                selection.select('#indicator-window-size')
+                    .call(changeWindowSize);
             });
         };
 
