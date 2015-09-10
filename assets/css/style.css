@@ -6956,11 +6956,8 @@ path.area {
   height: 100%;
 }
 .chart {
-  position: absolute;
   height: 100%;
   width: 100%;
-  display: block;
-  margin-left: 0px;
 }
 .menu #type-selection,
 .menu #period-selection {
@@ -6971,7 +6968,6 @@ path.area {
 }
 #head-row {
   width: 100%;
-  margin: 0px;
   padding-top: 10px;
   padding-bottom: 8px;
   background-color: #f0f8ff;

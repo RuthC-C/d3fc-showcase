@@ -171,8 +171,36 @@
                 annotatedTickValues.push(annotation[i]);
             }
         }
-
         return annotatedTickValues;
+    }
+
+    function findTotalYExtent(visibleData, currentSeries, currentIndicator) {
+        var extentAccessor;
+        if (currentSeries.option.yLowValue && currentSeries.option.yHighValue) {
+            extentAccessor = [currentSeries.option.yLowValue(), currentSeries.option.yHighValue()];
+        } else if (currentSeries.option.yValue) {
+            extentAccessor = currentSeries.option.yValue();
+        } else if (currentSeries.option.y1Value) {
+            extentAccessor = currentSeries.option.y1Value();
+        } else {
+            throw new Error('Main series given to chart does not have expected interface');
+        }
+        var extent = fc.util.extent(visibleData, extentAccessor);
+
+        var indicatorString = currentIndicator.valueString;
+        if (indicatorString === 'movingAverage') {
+            var movingAverageExtent = fc.util.extent(visibleData, 'movingAverage');
+            extent[0] = Math.min(movingAverageExtent[0], extent[0]);
+            extent[1] = Math.max(movingAverageExtent[1], extent[1]);
+        } else if (indicatorString === 'bollinger') {
+            var bollingerBandsVisibleDataObject = visibleData.map(function(d) { return d.bollingerBands; });
+            var bollingerBandsExtent = fc.util.extent(bollingerBandsVisibleDataObject, ['lower', 'upper']);
+            extent[0] = Math.min(bollingerBandsExtent[0], extent[0]);
+            extent[1] = Math.max(bollingerBandsExtent[1], extent[1]);
+        } else if (indicatorString !== 'no-indicator') {
+            throw new Error('Unexpected indicator type');
+        }
+        return extent;
     }
 
     sc.chart.primaryChart = function() {
@@ -192,7 +220,8 @@
             .yTicks(5)
             .xTicks(0);
 
-        var currentSeries = sc.series.candlestick();
+        var currentSeries = sc.menu.option('Candlestick', 'candlestick', sc.series.candlestick());
+        var currentIndicator = sc.menu.option('None', 'no-indicator', null);
 
         // Create and apply the Moving Average
         var movingAverage = fc.indicator.algorithm.movingAverage();
@@ -213,19 +242,11 @@
             })
             .series([gridlines, currentSeries, closeLine]);
 
-        var indMulti = fc.series.multi()
-                    .key(function(series, index) {
-                        if (series.isLine) {
-                            return index;
-                        }
-                        return series;
-                    });
-
         function updateMultiSeries() {
-            if (indMulti.series().length > 0) {
-                multi.series([gridlines, currentSeries, closeLine, indMulti]);
+            if (currentIndicator.option) {
+                multi.series([gridlines, currentSeries.option, closeLine, currentIndicator.option]);
             } else {
-                multi.series([gridlines, currentSeries, closeLine]);
+                multi.series([gridlines, currentSeries.option, closeLine]);
             }
         }
 
@@ -235,18 +256,11 @@
 
             timeSeries.xDomain(viewDomain);
 
-            // Scale y axis
-            var yExtent = fc.util.extent(sc.util.filterDataInDateRange(data, timeSeries.xDomain()), ['low', 'high']);
-            // Add 10% either side of extreme high/lows
-            var variance = yExtent[1] - yExtent[0];
-            yExtent[0] -= variance * 0.1;
-            yExtent[1] += variance * 0.1;
-            timeSeries.yDomain(yExtent);
+            var visibleData = sc.util.filterDataInDateRange(data, timeSeries.xDomain());
 
             // Find current tick values and add close price to this list, then set it explicitly below
             var closePrice = data[data.length - 1].close;
             var tickValues = produceAnnotatedTickValues(timeSeries.yScale(), [closePrice]);
-
             timeSeries.yTickValues(tickValues)
                 .yDecorate(function(s) {
                     s.classed('closeLine', function(d) {
@@ -263,6 +277,14 @@
             bollingerAlgorithm(data);
 
             updateMultiSeries();
+
+            // Scale y axis
+            var yExtent = findTotalYExtent(visibleData, currentSeries, currentIndicator);
+            // Add 10% either side of extreme high/lows
+            var variance = yExtent[1] - yExtent[0];
+            yExtent[0] -= variance * 0.1;
+            yExtent[1] += variance * 0.1;
+            timeSeries.yDomain(yExtent);
 
             multi.mapping(function(series) {
                 switch (series) {
@@ -294,21 +316,11 @@
 
         primaryChart.changeSeries = function(series) {
             currentSeries = series;
-            updateMultiSeries();
             return primaryChart;
         };
 
-        primaryChart.toggleIndicator = function(indicator) {
-            var ind = indMulti.series();
-            if (indicator.show) {
-                ind.push(indicator.option);
-                indMulti.series(ind);
-            } else {
-                var index = ind.indexOf(indicator.option);
-                ind.splice(index, 1);
-                indMulti.series(ind);
-            }
-            updateMultiSeries();
+        primaryChart.changeIndicator = function(indicator) {
+            currentIndicator = indicator;
             return primaryChart;
         };
 
@@ -376,8 +388,6 @@
             var data = selection.datum().data;
             var viewDomain = selection.datum().viewDomain;
 
-            var zoom = d3.behavior.zoom();
-
             // Redraw
             var xAxisContainer = selection.selectAll('g.x-axis')
                 .data([data]);
@@ -398,15 +408,6 @@
                 .domain(viewDomain);
 
             xAxisContainer.call(xAxis);
-
-            // Behaves oddly if not reinitialized every render
-            zoom.x(xScale)
-                .on('zoom', function() {
-                    sc.util.zoomControl(zoom, selection, data, xScale);
-                    dispatch.viewChange(xScale.domain());
-                });
-
-            selection.call(zoom);
         }
 
         d3.rebind(xAxisChart, dispatch, 'on');
@@ -454,72 +455,10 @@
     };
 
 })(d3, fc);
-(function(d3, fc) {
-    'use strict';
-
-    sc.menu.indicatorChoice = function() {
-        var dispatch = d3.dispatch('indicatorSelect');
-
-        function indicatorButtons(sel) {
-            sel.selectAll('label')
-                .data(sel.datum())
-                .enter()
-                .append('label')
-                .classed('btn btn-default', true)
-                .classed('checked', false)
-                .text(function(d, i) {return d.displayString; })
-                .insert('input')
-                .property('checked', false)
-                .attr({
-                    type: 'checkbox',
-                    name: 'indicatorType',
-                    id: function(d) {
-                        return d.valueString;
-                    },
-                    value: function(d, i) { return d.valueString; }
-                });
-        }
-
-        function indicatorChoice(selection) {
-            selection.call(indicatorButtons);
-
-            selection.selectAll('.btn')
-                .on('click', function() {
-                    var element = d3.select(this);
-                    setTimeout(function() {
-                        var selectedIndicator;
-                        var checked = element.select('input')
-                            .property('checked');
-                        selectedIndicator = element
-                            .datum();
-                        selectedIndicator.show = checked;
-                        dispatch.indicatorSelect(selectedIndicator);
-                    }, 0);
-
-                });
-        }
-
-        d3.rebind(indicatorChoice, dispatch, 'on');
-
-        return indicatorChoice;
-    };
-
-})(d3, fc);
 (function(d3, fc, sc) {
     'use strict';
 
     sc.menu.main = function() {
-
-        var movingAverage = fc.series.line()
-            .decorate(function(select) {
-                select.enter()
-                    .classed('movingAverage', true);
-            })
-            .yValue(function(d) { return d.movingAverage; });
-
-        var movingAverageIndicator = sc.menu.option('Moving Average', 'movingAverage', movingAverage);
-        var bollingerIndicator = sc.menu.option('Bollinger Bands', 'bollinger', fc.indicator.renderer.bollingerBands());
-        var indicators = [movingAverageIndicator, bollingerIndicator];
 
         var dispatch = d3.dispatch('primaryChartSeriesChange',
             'primaryChartIndicatorChange',
@@ -541,7 +480,6 @@
             });
 
         var primaryChartIndicatorOptions = sc.menu.primaryChart.indicators()
-            .indicators(indicators)
             .on('primaryChartIndicatorChange', function(indicator) {
                 dispatch.primaryChartIndicatorChange(indicator);
             });
@@ -604,27 +542,29 @@
     sc.menu.primaryChart.indicators = function() {
 
         var dispatch = d3.dispatch('primaryChartIndicatorChange');
-        var indicators;
 
-        var options = sc.menu.indicatorChoice()
-            .on('indicatorSelect', function(indicator) {
+        var movingAverage = fc.series.line()
+            .decorate(function(select) {
+                select.enter()
+                    .classed('movingAverage', true);
+            })
+            .yValue(function(d) { return d.movingAverage; });
+
+        var noIndicator = sc.menu.option('None', 'no-indicator', null);
+        var movingAverageIndicator = sc.menu.option('Moving Average', 'movingAverage', movingAverage);
+        var bollingerIndicator = sc.menu.option('Bollinger Bands', 'bollinger', fc.indicator.renderer.bollingerBands());
+
+        var options = sc.menu.generator.buttonGroup()
+            .on('optionChange', function(indicator) {
                 dispatch.primaryChartIndicatorChange(indicator);
             });
 
         var primaryChartSeriesMenu = function(selection) {
             selection.each(function() {
                 var selection = d3.select(this)
-                    .data([indicators]);
+                    .datum([noIndicator, movingAverageIndicator, bollingerIndicator]);
                 selection.call(options);
             });
-        };
-
-        primaryChartSeriesMenu.indicators = function(x) {
-            if (!arguments.length) {
-                return indicators;
-            }
-            indicators = x;
-            return primaryChartSeriesMenu;
         };
 
         return d3.rebind(primaryChartSeriesMenu, dispatch, 'on');
@@ -637,7 +577,7 @@
 
         var dispatch = d3.dispatch('primaryChartSeriesChange');
 
-        var candlestick = sc.menu.option('Candlestick', 'candlestick', fc.series.candlestick());
+        var candlestick = sc.menu.option('Candlestick', 'candlestick', sc.series.candlestick());
         var ohlc = sc.menu.option('OHLC', 'ohlc', fc.series.ohlc());
         var line = sc.menu.option('Line', 'line', fc.series.line());
         line.option.isLine = true;
@@ -993,12 +933,14 @@
         var barWidth = fc.util.fractionalBarWidth(0.75);
         var xValue = function(d, i) { return d.date; };
         var xValueScaled = function(d, i) { return xScale(xValue(d, i)); };
+        var yLowValue = function(d) { return d.low; };
+        var yHighValue = function(d) { return d.high; };
 
         var candlestickSvg = fc.svg.candlestick()
             .x(function(d) { return xScale(d.date); })
             .open(function(d) { return yScale(d.open); })
-            .high(function(d) { return yScale(d.high); })
-            .low(function(d) { return yScale(d.low); })
+            .high(function(d) { return yScale(yHighValue(d)); })
+            .low(function(d) { return yScale(yLowValue(d)); })
             .close(function(d) { return yScale(d.close); });
 
         var upDataJoin = fc.util.dataJoin()
@@ -1033,11 +975,28 @@
             xScale = x;
             return candlestick;
         };
+
         candlestick.yScale = function(x) {
             if (!arguments.length) {
                 return yScale;
             }
             yScale = x;
+            return candlestick;
+        };
+
+        candlestick.yLowValue = function(x) {
+            if (!arguments.length) {
+                return yLowValue;
+            }
+            yLowValue = x;
+            return candlestick;
+        };
+
+        candlestick.yHighValue = function(x) {
+            if (!arguments.length) {
+                return yHighValue;
+            }
+            yHighValue = x;
             return candlestick;
         };
 
@@ -1129,7 +1088,7 @@
 
     var mainMenu = sc.menu.main()
         .on('primaryChartSeriesChange', function(series) {
-            primaryChart.changeSeries(series.option);
+            primaryChart.changeSeries(series);
             /* Elements are drawn in the order they appear in the HTML - at this minute,
             D3FC doesn't maintain the ordering of elements, so it's easiest to just
             remove them and re-write them to the DOM in the correct order. */
@@ -1138,7 +1097,7 @@
             render();
         })
         .on('primaryChartIndicatorChange', function(indicator) {
-            primaryChart.toggleIndicator(indicator);
+            primaryChart.changeIndicator(indicator);
             svgPrimary.selectAll('.multi')
                 .remove();
             render();
